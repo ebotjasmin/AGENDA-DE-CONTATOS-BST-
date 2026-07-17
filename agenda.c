@@ -156,3 +156,49 @@ Contato *removerContato(Contato *raiz, char nome[]) {
 
     return raiz;
 }
+
+void salvarArquivo(Contato *raiz, FILE *arquivo) {
+    if (raiz == NULL)
+        return;
+
+    salvarArquivo(raiz->esq, arquivo);
+
+    fprintf(
+        arquivo,
+        "%s;%s;%s\n",
+        raiz->nome,
+        raiz->telefone,
+        raiz->email
+    );
+
+    salvarArquivo(raiz->dir, arquivo);
+}
+
+Contato *carregarArquivo(Contato *raiz, FILE *arquivo) {
+    char linha[250];
+    char nome[100];
+    char telefone[20];
+    char email[100];
+
+    if (fgets(linha, sizeof(linha), arquivo) == NULL) {
+        return raiz;
+    }
+
+    if (sscanf(
+            linha,
+            "%99[^;];%19[^;];%99[^\n]",
+            nome,
+            telefone,
+            email
+        ) == 3) {
+
+        raiz = inserirContato(
+            raiz,
+            nome,
+            telefone,
+            email
+        );
+    }
+
+    return carregarArquivo(raiz, arquivo);
+}

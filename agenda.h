@@ -36,5 +36,12 @@ Contato *removerContato(
     char nome[]
 );
 
+void salvarArquivo(Contato *raiz, FILE *arquivo);
+
+Contato *carregarArquivo(
+    Contato *raiz,
+    FILE *arquivo
+);
+
 #endif
 

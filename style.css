@@ -1,0 +1,180 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f3f5f7;
+    color: #222;
+    padding: 30px 15px;
+}
+
+.container {
+    width: 100%;
+    max-width: 1000px;
+    margin: auto;
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.cabecalho {
+    padding: 30px;
+    background: #1f4f8c;
+    color: white;
+}
+
+.cabecalho h1 {
+    margin-bottom: 8px;
+}
+
+.cabecalho p {
+    opacity: 0.9;
+}
+
+.formulario-area,
+.busca-area,
+.tabela-area {
+    padding: 25px 30px;
+}
+
+.formulario-area {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+#form-contato {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.campo label {
+    font-weight: bold;
+}
+
+.campo input,
+.busca-area input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cfd5dc;
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+}
+
+.campo input:focus,
+.busca-area input:focus {
+    border-color: #1f4f8c;
+}
+
+.botoes-formulario {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 10px;
+}
+
+button {
+    border: none;
+    border-radius: 8px;
+    padding: 12px 18px;
+    font-size: 15px;
+    cursor: pointer;
+    background: #1f4f8c;
+    color: white;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+.botao-secundario {
+    background: #777;
+}
+
+.busca-area {
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
+.titulo-lista {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.titulo-lista span {
+    color: #666;
+}
+
+.tabela-responsiva {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 14px;
+    border-bottom: 1px solid #e6e6e6;
+    text-align: left;
+}
+
+th {
+    background: #f7f8fa;
+}
+
+.acoes {
+    display: flex;
+    gap: 8px;
+}
+
+.botao-editar {
+    background: #d48b13;
+}
+
+.botao-remover {
+    background: #c0392b;
+}
+
+#mensagem-vazia {
+    text-align: center;
+    padding: 30px;
+    color: #777;
+}
+
+.oculto {
+    display: none;
+}
+
+@media (max-width: 750px) {
+    #form-contato {
+        grid-template-columns: 1fr;
+    }
+
+    .botoes-formulario {
+        flex-direction: column;
+    }
+
+    .titulo-lista {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .acoes {
+        flex-direction: column;
+    }
+}

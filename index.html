@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Agenda de Contatos</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="container">
+
+        <header class="cabecalho">
+            <h1>Agenda de Contatos</h1>
+            <p>Cadastre, busque, edite e remova contatos.</p>
+        </header>
+
+        <section class="formulario-area">
+
+            <form id="form-contato">
+
+                <input type="hidden" id="indice-edicao">
+
+                <div class="campo">
+                    <label for="nome">Nome</label>
+                    <input
+                        type="text"
+                        id="nome"
+                        placeholder="Digite o nome"
+                        required
+                    >
+                </div>
+
+                <div class="campo">
+                    <label for="telefone">Telefone</label>
+                    <input
+                        type="text"
+                        id="telefone"
+                        placeholder="Digite o telefone"
+                        required
+                    >
+                </div>
+
+                <div class="campo">
+                    <label for="email">E-mail</label>
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Digite o e-mail"
+                        required
+                    >
+                </div>
+
+                <div class="botoes-formulario">
+
+                    <button type="submit" id="botao-salvar">
+                        Cadastrar contato
+                    </button>
+
+                    <button
+                        type="button"
+                        id="botao-cancelar"
+                        class="botao-secundario oculto"
+                    >
+                        Cancelar edição
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+        <section class="busca-area">
+
+            <input
+                type="text"
+                id="campo-busca"
+                placeholder="Buscar contato pelo nome"
+            >
+
+        </section>
+
+        <section class="tabela-area">
+
+            <div class="titulo-lista">
+                <h2>Contatos cadastrados</h2>
+                <span id="total-contatos">0 contatos</span>
+            </div>
+
+            <div class="tabela-responsiva">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Telefone</th>
+                            <th>E-mail</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="lista-contatos"></tbody>
+
+                </table>
+
+            </div>
+
+            <p id="mensagem-vazia">
+                Nenhum contato cadastrado.
+            </p>
+
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

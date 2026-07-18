@@ -4,6 +4,7 @@ const campoNome = document.getElementById("nome");
 const campoTelefone = document.getElementById("telefone");
 const campoEmail = document.getElementById("email");
 const campoBusca = document.getElementById("campo-busca");
+
 const indiceEdicao = document.getElementById("indice-edicao");
 
 const listaContatos = document.getElementById("lista-contatos");
@@ -13,187 +14,492 @@ const mensagemVazia = document.getElementById("mensagem-vazia");
 const botaoSalvar = document.getElementById("botao-salvar");
 const botaoCancelar = document.getElementById("botao-cancelar");
 
+
 let contatos = carregarContatos();
 
-function carregarContatos() {
+
+
+/* ===========================
+   LOCAL STORAGE
+=========================== */
+
+
+function carregarContatos(){
+
     const dados = localStorage.getItem("contatos");
 
-    if (dados === null) {
-        return [];
-    }
+    return dados ? JSON.parse(dados) : [];
 
-    return JSON.parse(dados);
 }
 
-function salvarContatos() {
+
+
+function salvarContatos(){
+
     localStorage.setItem(
         "contatos",
         JSON.stringify(contatos)
     );
+
 }
 
-function ordenarContatos() {
-    contatos.sort((a, b) =>
+
+
+
+/* ===========================
+   ORDENAÇÃO
+=========================== */
+
+
+function ordenarContatos(){
+
+    contatos.sort((a,b)=>
         a.nome.localeCompare(b.nome)
     );
+
 }
 
-function mostrarContatos(filtro = "") {
-    listaContatos.innerHTML = "";
 
-    const contatosFiltrados = contatos.filter(contato =>
-        contato.nome
-            .toLowerCase()
-            .includes(filtro.toLowerCase())
+
+/* ===========================
+   VALIDAÇÕES
+=========================== */
+
+
+function validarTelefone(telefone){
+
+    return /^[0-9]{11}$/.test(telefone);
+
+}
+
+
+
+function validarEmail(email){
+
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+}
+
+
+
+
+function contatoJaExiste(nome, ignorar = -1){
+
+    return contatos.some((contato,index)=>
+
+        contato.nome.toLowerCase() === nome.toLowerCase()
+        &&
+        index !== ignorar
+
     );
 
-    contatosFiltrados.forEach(contato => {
-        const indiceReal = contatos.indexOf(contato);
+}
 
-        const linha = document.createElement("tr");
 
-        linha.innerHTML = `
+
+/* ===========================
+   MOSTRAR CONTATOS
+=========================== */
+
+
+function mostrarContatos(filtro=""){
+
+
+    listaContatos.innerHTML="";
+
+
+    const resultado = contatos.filter(contato=>
+
+        contato.nome
+        .toLowerCase()
+        .includes(
+            filtro.toLowerCase()
+        )
+
+    );
+
+
+
+    resultado.forEach(contato=>{
+
+
+        const indice = contatos.indexOf(contato);
+
+
+
+        const linha=document.createElement("tr");
+
+
+
+        linha.innerHTML=`
+
             <td>${contato.nome}</td>
-            <td>${contato.telefone}</td>
-            <td>${contato.email}</td>
-            <td>
-                <div class="acoes">
-                    <button
-                        class="botao-editar"
-                        onclick="editarContato(${indiceReal})"
-                    >
-                        Editar
-                    </button>
 
-                    <button
-                        class="botao-remover"
-                        onclick="removerContato(${indiceReal})"
-                    >
-                        Remover
-                    </button>
-                </div>
+            <td>${contato.telefone}</td>
+
+            <td>${contato.email}</td>
+
+            <td>
+
+                <button class="botao-editar">
+                    Editar
+                </button>
+
+
+                <button class="botao-remover">
+                    Remover
+                </button>
+
             </td>
+
         `;
 
+
+
+        linha
+        .querySelector(".botao-editar")
+        .addEventListener(
+            "click",
+            ()=>editarContato(indice)
+        );
+
+
+
+        linha
+        .querySelector(".botao-remover")
+        .addEventListener(
+            "click",
+            ()=>removerContato(indice)
+        );
+
+
+
         listaContatos.appendChild(linha);
+
+
     });
 
-    totalContatos.textContent =
-        `${contatos.length} contato(s)`;
 
-    if (contatosFiltrados.length === 0) {
-        mensagemVazia.classList.remove("oculto");
-    } else {
-        mensagemVazia.classList.add("oculto");
-    }
+
+    totalContatos.textContent =
+    `${contatos.length} contato(s)`;
+
+
+
+    mensagemVazia.classList.toggle(
+        "oculto",
+        resultado.length !== 0
+    );
+
 }
 
-function limparFormulario() {
-    formulario.reset();
-    indiceEdicao.value = "";
 
-    botaoSalvar.textContent = "Cadastrar contato";
-    botaoCancelar.classList.add("oculto");
+
+
+
+/* ===========================
+   LIMPAR FORMULÁRIO
+=========================== */
+
+
+function limparFormulario(){
+
+    formulario.reset();
+
+    indiceEdicao.value="";
+
+
+    botaoSalvar.textContent =
+    "Cadastrar contato";
+
+
+    botaoCancelar.classList.add(
+        "oculto"
+    );
+
 
     campoNome.focus();
+
 }
 
-function contatoJaExiste(nome, indiceIgnorado = -1) {
-    return contatos.some((contato, indice) =>
-        contato.nome.toLowerCase() === nome.toLowerCase()
-        && indice !== indiceIgnorado
-    );
-}
 
-formulario.addEventListener("submit", function(evento) {
+
+
+/* ===========================
+   CADASTRAR / EDITAR
+=========================== */
+
+
+formulario.addEventListener(
+"submit",
+evento=>{
+
+
     evento.preventDefault();
 
-    const nome = campoNome.value.trim();
-    const telefone = campoTelefone.value.trim();
-    const email = campoEmail.value.trim();
 
-    if (!nome || !telefone || !email) {
-        alert("Preencha todos os campos.");
+
+    const nome =
+    campoNome.value.trim();
+
+
+    const telefone =
+    campoTelefone.value.trim();
+
+
+    const email =
+    campoEmail.value.trim();
+
+
+
+    if(!nome || !telefone || !email){
+
+        alert(
+        "Preencha todos os campos."
+        );
+
         return;
+
     }
 
-    const indice = indiceEdicao.value;
 
-    if (indice === "") {
-        if (contatoJaExiste(nome)) {
-            alert("Já existe um contato com esse nome.");
+
+    if(!validarTelefone(telefone)){
+
+
+        alert(
+        "Telefone deve possuir 11 números."
+        );
+
+
+        return;
+
+    }
+
+
+
+    if(!validarEmail(email)){
+
+
+        alert(
+        "E-mail inválido."
+        );
+
+
+        return;
+
+    }
+
+
+
+
+    const indice =
+    indiceEdicao.value;
+
+
+
+    if(indice===""){
+
+
+
+        if(contatoJaExiste(nome)){
+
+
+            alert(
+            "Contato já cadastrado."
+            );
+
+
             return;
+
         }
+
+
+
 
         contatos.push({
+
             nome,
             telefone,
             email
+
         });
 
-        alert("Contato cadastrado com sucesso.");
-    } else {
-        const indiceNumero = Number(indice);
 
-        if (contatoJaExiste(nome, indiceNumero)) {
-            alert("Já existe outro contato com esse nome.");
-            return;
-        }
 
-        contatos[indiceNumero] = {
+        alert(
+        "Contato cadastrado!"
+        );
+
+
+
+    }else{
+
+
+
+        const posicao =
+        Number(indice);
+
+
+
+        contatos[posicao]={
+
             nome,
             telefone,
             email
+
         };
 
-        alert("Contato atualizado com sucesso.");
+
+
+        alert(
+        "Contato atualizado!"
+        );
+
+
     }
+
+
 
     ordenarContatos();
+
     salvarContatos();
-    mostrarContatos(campoBusca.value);
-    limparFormulario();
-});
 
-function editarContato(indice) {
-    const contato = contatos[indice];
-
-    campoNome.value = contato.nome;
-    campoTelefone.value = contato.telefone;
-    campoEmail.value = contato.email;
-    indiceEdicao.value = indice;
-
-    botaoSalvar.textContent = "Salvar alterações";
-    botaoCancelar.classList.remove("oculto");
-
-    campoNome.focus();
-}
-
-function removerContato(indice) {
-    const contato = contatos[indice];
-
-    const confirmar = confirm(
-        `Deseja remover o contato "${contato.nome}"?`
+    mostrarContatos(
+        campoBusca.value
     );
 
-    if (!confirmar) {
-        return;
-    }
 
-    contatos.splice(indice, 1);
-
-    salvarContatos();
-    mostrarContatos(campoBusca.value);
     limparFormulario();
+
+
+
+});
+
+
+
+
+
+/* ===========================
+   EDITAR
+=========================== */
+
+
+function editarContato(indice){
+
+
+    const contato =
+    contatos[indice];
+
+
+
+    campoNome.value =
+    contato.nome;
+
+
+    campoTelefone.value =
+    contato.telefone;
+
+
+    campoEmail.value =
+    contato.email;
+
+
+
+    indiceEdicao.value =
+    indice;
+
+
+
+    botaoSalvar.textContent =
+    "Salvar alterações";
+
+
+
+    botaoCancelar.classList.remove(
+        "oculto"
+    );
+
+
 }
 
-campoBusca.addEventListener("input", function() {
-    mostrarContatos(campoBusca.value);
+
+
+
+
+/* ===========================
+   REMOVER
+=========================== */
+
+
+function removerContato(indice){
+
+
+    const contato =
+    contatos[indice];
+
+
+
+    if(!confirm(
+        `Remover ${contato.nome}?`
+    )){
+
+        return;
+
+    }
+
+
+
+    contatos.splice(
+        indice,
+        1
+    );
+
+
+
+    salvarContatos();
+
+
+    mostrarContatos(
+        campoBusca.value
+    );
+
+
+    limparFormulario();
+
+
+}
+
+
+
+
+
+/* ===========================
+   EVENTOS
+=========================== */
+
+
+campoBusca.addEventListener(
+"input",
+()=>{
+
+    mostrarContatos(
+        campoBusca.value
+    );
+
 });
 
-botaoCancelar.addEventListener("click", function() {
-    limparFormulario();
-});
+
+
+
+botaoCancelar.addEventListener(
+"click",
+limparFormulario
+);
+
+
+
 
 ordenarContatos();
+
 mostrarContatos();

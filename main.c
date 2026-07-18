@@ -2,6 +2,7 @@
 #include "agenda.h"
 
 int main() {
+
     Contato *raiz = NULL;
     Contato *contato;
     FILE *arquivo;
@@ -15,6 +16,7 @@ int main() {
     }
 
     do {
+
         printf("\n===== AGENDA DE CONTATOS =====\n");
         printf("1 - Inserir contato\n");
         printf("2 - Listar contatos\n");
@@ -22,106 +24,150 @@ int main() {
         printf("4 - Remover contato\n");
         printf("5 - Sair\n");
         printf("Escolha uma opcao: ");
-
         scanf("%d", &opcao);
 
         switch (opcao) {
 
-            case 1: {
-                char nome[100];
-                char telefone[20];
-                char email[100];
+        case 1: {
 
-                printf("\nNome: ");
-                scanf(" %99[^\n]", nome);
+            char nome[100];
+            char telefone[20];
+            char email[100];
 
-                printf("Telefone: ");
-                scanf(" %19s", telefone);
+            printf("\nNome: ");
+            scanf(" %99[^\n]", nome);
 
-                printf("E-mail: ");
-                scanf(" %99s", email);
-
-                if (buscarContato(raiz, nome) != NULL) {
-                    printf("\nJa existe um contato com esse nome.\n");
-                } else {
-                    raiz = inserirContato(
-                        raiz,
-                        nome,
-                        telefone,
-                        email
-                    );
-
-                    printf("\nContato cadastrado com sucesso.\n");
-                }
-
+            if (!nomeValido(nome)) {
+                printf("\nErro: o nome nao pode conter numeros.\n");
                 break;
             }
 
-            case 2:
-    printf("\n=== CONTATOS CADASTRADOS ===\n");
+            printf("Telefone: ");
+            scanf(" %19s", telefone);
 
-    if (raiz == NULL) {
-        printf("A agenda esta vazia.\n");
-    } else {
-        listarContatos(raiz);
-    }
-
-    break;
-            case 3: {
-                char nome[100];
-
-                printf("\nDigite o nome do contato: ");
-                scanf(" %99[^\n]", nome);
-
-                contato = buscarContato(raiz, nome);
-
-                if (contato == NULL) {
-                    printf("\nContato nao encontrado.\n");
-                } else {
-                    printf("\n=== CONTATO ENCONTRADO ===\n");
-                    printf("Nome: %s\n", contato->nome);
-                    printf("Telefone: %s\n", contato->telefone);
-                    printf("E-mail: %s\n", contato->email);
-                }
-
+            if (!telefoneValido(telefone)) {
+                printf("\nErro: o telefone deve conter exatamente 11 numeros.\n");
                 break;
             }
 
-            case 4: {
-                char nome[100];
+            printf("E-mail: ");
+            scanf(" %99s", email);
 
-                printf("\nNome do contato a remover: ");
-                scanf(" %99[^\n]", nome);
-
-                contato = buscarContato(raiz, nome);
-
-                if (contato == NULL) {
-                    printf("\nContato nao encontrado.\n");
-                } else {
-                    raiz = removerContato(raiz, nome);
-                    printf("\nContato removido com sucesso.\n");
-                }
-
+            if (!emailValido(email)) {
+                printf("\nErro: e-mail invalido.\n");
                 break;
             }
 
-            case 5:
-                arquivo = fopen("agenda.txt", "w");
+            if (buscarContato(raiz, nome) != NULL) {
 
-                if (arquivo == NULL) {
-                    printf("\nErro ao abrir agenda.txt para salvar.\n");
-                } else {
-                    salvarArquivo(raiz, arquivo);
-                    fclose(arquivo);
+                printf("\nJa existe um contato com esse nome.\n");
 
-                    printf("\nContatos salvos com sucesso.\n");
-                }
+            } else {
 
-                printf("Programa encerrado.\n");
-                break;
+                raiz = inserirContato(
+                    raiz,
+                    nome,
+                    telefone,
+                    email
+                );
 
-            default:
-                printf("\nOpcao invalida.\n");
+                printf("\nContato cadastrado com sucesso.\n");
+            }
+
+            break;
+        }
+
+        case 2:
+
+            printf("\n===== CONTATOS CADASTRADOS =====\n");
+
+            if (raiz == NULL) {
+
+                printf("A agenda esta vazia.\n");
+
+            } else {
+
+                listarContatos(raiz);
+
+            }
+
+            break;
+
+        case 3: {
+
+            char nome[100];
+
+            printf("\nDigite o nome do contato: ");
+            scanf(" %99[^\n]", nome);
+
+            contato = buscarContato(raiz, nome);
+
+            if (contato == NULL) {
+
+                printf("\nContato nao encontrado.\n");
+
+            } else {
+
+                printf("\n===== CONTATO ENCONTRADO =====\n");
+                printf("Nome: %s\n", contato->nome);
+                printf("Telefone: %s\n", contato->telefone);
+                printf("E-mail: %s\n", contato->email);
+
+            }
+
+            break;
+        }
+
+        case 4: {
+
+            char nome[100];
+
+            printf("\nNome do contato a remover: ");
+            scanf(" %99[^\n]", nome);
+
+            contato = buscarContato(raiz, nome);
+
+            if (contato == NULL) {
+
+                printf("\nContato nao encontrado.\n");
+
+            } else {
+
+                raiz = removerContato(raiz, nome);
+
+                printf("\nContato removido com sucesso.\n");
+
+            }
+
+            break;
+        }
+
+        case 5:
+
+            arquivo = fopen("agenda.txt", "w");
+
+            if (arquivo == NULL) {
+
+                printf("\nErro ao salvar arquivo.\n");
+
+            } else {
+
+                salvarArquivo(raiz, arquivo);
+
+                fclose(arquivo);
+
+                printf("\nContatos salvos com sucesso.\n");
+
+            }
+
+            printf("\nPrograma encerrado.\n");
+
+            break;
+
+        default:
+
+            printf("\nOpcao invalida.\n");
+
         }
 
     } while (opcao != 5);

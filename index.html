@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,114 +12,275 @@
 
 <body>
 
-    <main class="container">
+<main class="container">
 
-        <header class="cabecalho">
-            <h1>Agenda de Contatos</h1>
-            <p>Cadastre, busque, edite e remova contatos.</p>
-        </header>
 
-        <section class="formulario-area">
+    <header class="cabecalho">
 
-            <form id="form-contato">
+        <h1>📒 Agenda de Contatos</h1>
 
-                <input type="hidden" id="indice-edicao">
+        <p>
+            Cadastre, pesquise, edite e remova seus contatos.
+        </p>
 
-                <div class="campo">
-                    <label for="nome">Nome</label>
-                    <input
-                        type="text"
-                        id="nome"
-                        placeholder="Digite o nome"
-                        required
-                    >
-                </div>
+    </header>
 
-                <div class="campo">
-                    <label for="telefone">Telefone</label>
-                    <input
-                        type="text"
-                        id="telefone"
-                        placeholder="Digite o telefone"
-                        required
-                    >
-                </div>
 
-                <div class="campo">
-                    <label for="email">E-mail</label>
-                    <input
-                        type="email"
-                        id="email"
-                        placeholder="Digite o e-mail"
-                        required
-                    >
-                </div>
 
-                <div class="botoes-formulario">
+    <section class="formulario-area">
 
-                    <button type="submit" id="botao-salvar">
-                        Cadastrar contato
-                    </button>
+        <h2>Novo contato</h2>
 
-                    <button
-                        type="button"
-                        id="botao-cancelar"
-                        class="botao-secundario oculto"
-                    >
-                        Cancelar edição
-                    </button>
 
-                </div>
+        <form id="form-contato">
 
-            </form>
 
-        </section>
-
-        <section class="busca-area">
-
-            <input
-                type="text"
-                id="campo-busca"
-                placeholder="Buscar contato pelo nome"
+            <input 
+                type="hidden" 
+                id="indice-edicao"
             >
 
-        </section>
 
-        <section class="tabela-area">
 
-            <div class="titulo-lista">
-                <h2>Contatos cadastrados</h2>
-                <span id="total-contatos">0 contatos</span>
-            </div>
+            <div class="campo">
 
-            <div class="tabela-responsiva">
+                <label for="nome">
+                    Nome
+                </label>
 
-                <table>
-
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>Telefone</th>
-                            <th>E-mail</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="lista-contatos"></tbody>
-
-                </table>
+                <input
+                    type="text"
+                    id="nome"
+                    name="nome"
+                    placeholder="Digite o nome completo"
+                    autocomplete="name"
+                    required
+                >
 
             </div>
 
-            <p id="mensagem-vazia">
-                Nenhum contato cadastrado.
-            </p>
 
-        </section>
 
-    </main>
 
-    <script src="script.js"></script>
+            <div class="campo">
+
+                <label for="telefone">
+                    Telefone
+                </label>
+
+                <input
+                    type="tel"
+                    id="telefone"
+                    name="telefone"
+                    placeholder="(00) 00000-0000"
+                    autocomplete="tel"
+                    maxlength="11"
+                    required
+                >
+
+            </div>
+
+
+
+
+            <div class="campo">
+
+                <label for="email">
+                    E-mail
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="exemplo@email.com"
+                    autocomplete="email"
+                    required
+                >
+
+            </div>
+
+
+
+
+
+            <div class="botoes-formulario">
+
+
+                <button
+                    type="submit"
+                    id="botao-salvar"
+                >
+
+                    Cadastrar contato
+
+                </button>
+
+
+
+
+                <button
+                    type="button"
+                    id="botao-cancelar"
+                    class="botao-secundario oculto"
+                >
+
+                    Cancelar edição
+
+                </button>
+
+
+            </div>
+
+
+        </form>
+
+
+    </section>
+
+
+
+
+
+    <section class="busca-area">
+
+
+        <label for="campo-busca">
+            Buscar contato
+        </label>
+
+
+        <input
+            type="search"
+            id="campo-busca"
+            placeholder="Digite o nome do contato"
+            aria-label="Buscar contato pelo nome"
+        >
+
+
+    </section>
+
+
+
+
+
+
+
+    <section class="tabela-area">
+
+
+        <div class="titulo-lista">
+
+
+            <h2>
+                Contatos cadastrados
+            </h2>
+
+
+            <span id="total-contatos">
+                0 contatos
+            </span>
+
+
+        </div>
+
+
+
+
+
+
+        <div class="tabela-responsiva">
+
+
+            <table>
+
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Nome
+                        </th>
+
+
+                        <th>
+                            Telefone
+                        </th>
+
+
+                        <th>
+                            E-mail
+                        </th>
+
+
+                        <th>
+                            Ações
+                        </th>
+
+
+                    </tr>
+
+
+                </thead>
+
+
+
+
+                <tbody id="lista-contatos">
+
+                    <!-- Contatos inseridos pelo JavaScript -->
+
+                </tbody>
+
+
+
+            </table>
+
+
+
+        </div>
+
+
+
+
+
+
+        <p 
+            id="mensagem-vazia"
+            class="mensagem-vazia"
+        >
+
+            Nenhum contato cadastrado.
+
+        </p>
+
+
+
+    </section>
+
+
+
+
+
+    <footer class="rodape">
+
+        <p>
+            Agenda de Contatos • Projeto com JavaScript
+        </p>
+
+    </footer>
+
+
+
+</main>
+
+
+
+
+<script src="script.js"></script>
+
 
 </body>
+
 </html>

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "agenda.h"
 
 Contato *criarContato(char nome[], char telefone[], char email[]) {
@@ -27,35 +28,42 @@ Contato *inserirContato(
     char telefone[],
     char email[]
 ) {
+
     if (raiz == NULL) {
         return criarContato(nome, telefone, email);
     }
 
     if (strcmp(nome, raiz->nome) < 0) {
+
         raiz->esq = inserirContato(
             raiz->esq,
             nome,
             telefone,
             email
         );
+
     } else if (strcmp(nome, raiz->nome) > 0) {
+
         raiz->dir = inserirContato(
             raiz->dir,
             nome,
             telefone,
             email
         );
+
     } else {
-        printf("Contato já existe.\n");
+
+        printf("Contato ja existe.\n");
+
     }
 
     return raiz;
 }
 
 void listarContatos(Contato *raiz) {
-    if (raiz == NULL) {
+
+    if (raiz == NULL)
         return;
-    }
 
     listarContatos(raiz->esq);
 
@@ -82,7 +90,6 @@ Contato *buscarContato(Contato *raiz, char nome[]) {
     return buscarContato(raiz->dir, nome);
 }
 
-
 Contato *menorContato(Contato *raiz) {
 
     if (raiz == NULL)
@@ -93,7 +100,6 @@ Contato *menorContato(Contato *raiz) {
 
     return menorContato(raiz->esq);
 }
-
 
 Contato *removerContato(Contato *raiz, char nome[]) {
 
@@ -158,6 +164,7 @@ Contato *removerContato(Contato *raiz, char nome[]) {
 }
 
 void salvarArquivo(Contato *raiz, FILE *arquivo) {
+
     if (raiz == NULL)
         return;
 
@@ -175,14 +182,14 @@ void salvarArquivo(Contato *raiz, FILE *arquivo) {
 }
 
 Contato *carregarArquivo(Contato *raiz, FILE *arquivo) {
+
     char linha[250];
     char nome[100];
     char telefone[20];
     char email[100];
 
-    if (fgets(linha, sizeof(linha), arquivo) == NULL) {
+    if (fgets(linha, sizeof(linha), arquivo) == NULL)
         return raiz;
-    }
 
     if (sscanf(
             linha,
@@ -198,7 +205,55 @@ Contato *carregarArquivo(Contato *raiz, FILE *arquivo) {
             telefone,
             email
         );
+
     }
 
     return carregarArquivo(raiz, arquivo);
+}
+
+/* ===========================
+   VALIDAÇÕES
+   =========================== */
+
+int nomeValido(char nome[]) {
+
+    if (strlen(nome) == 0)
+        return 0;
+
+    for (int i = 0; nome[i] != '\0'; i++) {
+
+        if (isdigit(nome[i])) {
+            return 0;
+        }
+
+    }
+
+    return 1;
+}
+
+int telefoneValido(char telefone[]) {
+
+    if (strlen(telefone) != 11)
+        return 0;
+
+    for (int i = 0; telefone[i] != '\0'; i++) {
+
+        if (!isdigit(telefone[i])) {
+            return 0;
+        }
+
+    }
+
+    return 1;
+}
+
+int emailValido(char email[]) {
+
+    if (strchr(email, '@') == NULL)
+        return 0;
+
+    if (strchr(email, '.') == NULL)
+        return 0;
+
+    return 1;
 }
